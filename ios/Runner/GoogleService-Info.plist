@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDLsBNgq41G8em2kp_l6BMxJ8rr65nkW60</string>
+	<key>GCM_SENDER_ID</key>
+	<string>329621320065</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>windowgrapher.com.alarm</string>
+	<key>PROJECT_ID</key>
+	<string>window-grapher</string>
+	<key>STORAGE_BUCKET</key>
+	<string>window-grapher.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:329621320065:ios:8d9d4c15b015eb13c1b880</string>
+</dict>
+</plist>
