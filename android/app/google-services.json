@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "329621320065",
+    "project_id": "window-grapher",
+    "storage_bucket": "window-grapher.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329621320065:android:a2ae282ef040d245c1b880",
+        "android_client_info": {
+          "package_name": "window_grapher.com.alarm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi2Ke4NGqor5OZLocozQr49X4Bf3PBJvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
