@@ -10,4 +10,4 @@ services:
     working_dir: /app
     stdin_open: true
     tty: true
-    command: ["sleep", "infinity"]
+    command: ["flutter", "build", "apk", "--debug"]
