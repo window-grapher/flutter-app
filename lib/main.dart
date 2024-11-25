@@ -1,16 +1,32 @@
 import 'dart:async';
 
+import 'package:alarm/firebase.dart';
 import 'package:alarm/permission.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:vibration/vibration.dart';
+import 'firebase_options.dart';
 
 import 'notification.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   requestPermission();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  final fcmToken = await getDeviceToken();
+  print("token: $fcmToken");
+  // Handle foreground message.
+  handleMessage((message) => {
+    LocalNotification().show("foreground", message)
+  });
+  // Handle background message.
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
   runApp(
     const MaterialApp(
       home: WebViewApp(),
@@ -81,7 +97,7 @@ class _WebViewAppState extends State<WebViewApp> {
       if (!isRinging) {
         Future.delayed(const Duration(seconds: 5), ()
         {
-          LocalNotification().show();
+          LocalNotification().show("alarm", "alarm triggered");
           FlutterRingtonePlayer().playAlarm();
           timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
             Vibration.vibrate(duration: 1000);
