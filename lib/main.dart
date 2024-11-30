@@ -20,6 +20,8 @@ Future<void> main() async {
   );
   final fcmToken = await getDeviceToken();
   print("token: $fcmToken");
+  // TODO: Register fcmToken.
+
   // Handle foreground message.
   handleMessage((message) => {
     LocalNotification().show("foreground", message)
