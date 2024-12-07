@@ -21,22 +21,22 @@ Future<void> main() async {
   );
   final fcmToken = await getDeviceToken();
   print("token: $fcmToken");
-  // TODO: Register fcmToken.
 
   // Handle foreground message.
   handleMessage((message) => {LocalNotification().show("foreground", message)});
   // Handle background message.
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  runApp(const ProviderScope(
+  runApp(ProviderScope(
     child: MaterialApp(
-      home: MyApp(),
+      home: MyApp(fcmToken ?? ""),
     ),
   ));
 }
 
 class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+  final String fcmToken;
+  const MyApp(this.fcmToken, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +50,7 @@ class MyApp extends ConsumerWidget {
               appBar: AppBar(
                 title: const Text('車窓Grapher'),
               ),
-              body: const WebView(),
+              body: WebView(fcmToken),
               floatingActionButton: const ToggleAlarmButton(),
             )));
   }

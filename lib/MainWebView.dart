@@ -4,9 +4,9 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class WebView extends ConsumerWidget {
-  const WebView({
-    super.key,
-  });
+  final String fcmToken;
+
+  const WebView(this.fcmToken, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,8 +19,9 @@ class WebView extends ConsumerWidget {
           retain: true,
         );
       },
-      initialUrlRequest:
-          URLRequest(url: WebUri("https://window-grapher.app.takoyaki3.com")),
+      initialUrlRequest: URLRequest(
+          url: WebUri(
+              "https://window-grapher-yanbaru-express.app.takoyaki3.com/?fcm={$fcmToken}")),
       initialSettings: InAppWebViewSettings(
         javaScriptCanOpenWindowsAutomatically: true,
         geolocationEnabled: true,
