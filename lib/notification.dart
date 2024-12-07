@@ -24,8 +24,8 @@ class LocalNotification {
           iOS: DarwinInitializationSettings()));
   }
 
-  show() {
-    var notificationDetails = NotificationDetails(
+  show(String title, String message) {
+    final notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         channel.id,
         channel.name,
@@ -37,8 +37,8 @@ class LocalNotification {
 
     flutterLocalNotifications.show(
       1,
-      "Alarm",
-      "show notification",
+      title,
+      message,
       notificationDetails,
     );
   }
