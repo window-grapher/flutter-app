@@ -23,7 +23,7 @@ Future<void> main() async {
   print("token: $fcmToken");
 
   // Handle foreground message.
-  handleMessage((message) => {LocalNotification().show("foreground", message)});
+  handleMessage((title, message) => {LocalNotification().show(title, message)});
   // Handle background message.
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
@@ -36,6 +36,7 @@ Future<void> main() async {
 
 class MyApp extends ConsumerWidget {
   final String fcmToken;
+
   const MyApp(this.fcmToken, {super.key});
 
   @override
@@ -51,7 +52,7 @@ class MyApp extends ConsumerWidget {
                 title: const Text('車窓Grapher'),
               ),
               body: WebView(fcmToken),
-              floatingActionButton: const ToggleAlarmButton(),
+              // floatingActionButton: const ToggleAlarmButton(),
             )));
   }
 }
