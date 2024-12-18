@@ -52,7 +52,7 @@ class MyApp extends ConsumerWidget {
                 title: const Text('車窓Grapher'),
               ),
               body: WebView(fcmToken),
-              // floatingActionButton: const ToggleAlarmButton(),
+              floatingActionButton: const StopAlarmButton(),
             )));
   }
 }

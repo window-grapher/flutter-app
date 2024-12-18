@@ -1,6 +1,10 @@
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'alarm.dart';
 import 'notification.dart';
 
 void handleMessage(Function(String, String) onMessage) async {
@@ -28,6 +32,7 @@ void handleMessage(Function(String, String) onMessage) async {
     print(
         "message has come on foreground. ${message.data["title"]}: ${message.data["body"]}");
     onMessage(message.data["title"], message.data["body"]);
+    // FlutterRingtonePlayer().playAlarm();
   });
 }
 
@@ -38,6 +43,15 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       "message has come on background. ${message.data["title"]}: ${message.data["body"]}");
   LocalNotification().show(message.data["title"], message.data["body"]);
   // FlutterRingtonePlayer().playAlarm();
+
+  // Enable to stop alarm.
+  ReceivePort receiver = ReceivePort();
+  IsolateNameServer.registerPortWithName(receiver.sendPort, portName);
+  receiver.listen((message) async {
+    if (message == "stop") {
+      await FlutterRingtonePlayer().stop();
+    }
+  });
 }
 
 Future<String?> getDeviceToken() async {
