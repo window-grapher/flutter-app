@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:alarm/firebase.dart';
 import 'package:alarm/permission.dart';
+import 'package:alarm/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:vibration/vibration.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'MainWebView.dart';
+import 'alarm.dart';
 import 'firebase_options.dart';
 
 import 'notification.dart';
@@ -15,96 +16,43 @@ import 'notification.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   requestPermission();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-  // final fcmToken = await FirebaseMessaging.instance.getToken();
-  // print("token: $fcmToken");
-  //
-  // handleMessage(() => {
-  //   LocalNotification().show()
-  // });
-
-  runApp(
-    const MaterialApp(
-      home: WebViewApp(),
-    ),
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+  final fcmToken = await getDeviceToken();
+  print("token: $fcmToken");
+
+  // Handle foreground message.
+  handleMessage((title, message) => {LocalNotification().show(title, message)});
+  // Handle background message.
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  runApp(ProviderScope(
+    child: MaterialApp(
+      home: MyApp(fcmToken ?? ""),
+    ),
+  ));
 }
 
-class WebViewApp extends StatefulWidget {
-  const WebViewApp({super.key});
+class MyApp extends ConsumerWidget {
+  final String fcmToken;
+
+  const MyApp(this.fcmToken, {super.key});
 
   @override
-  State<WebViewApp> createState() => _WebViewAppState();
-}
-
-class _WebViewAppState extends State<WebViewApp> {
-  var isRinging = false;
-  Timer? timer;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    InAppWebViewController? webViewController;
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
         home: PopScope(
             canPop: false,
             onPopInvoked: (didPop) async {
-              webViewController?.goBack();
+              ref.watch(webViewNotifierProvider).webViewController?.goBack();
             },
             child: Scaffold(
               appBar: AppBar(
                 title: const Text('車窓Grapher'),
               ),
-              body: InAppWebView(
-                onGeolocationPermissionsShowPrompt:
-                    (InAppWebViewController controller, String origin) async {
-                  return GeolocationPermissionShowPromptResponse(
-                    origin: origin,
-                    allow: true,
-                    retain: true,
-                  );
-                },
-                initialUrlRequest: URLRequest(
-                    url: WebUri("https://window-grapher.app.takoyaki3.com")),
-                initialSettings: InAppWebViewSettings(
-                  javaScriptCanOpenWindowsAutomatically: true,
-                  geolocationEnabled: true,
-                  javaScriptEnabled: true,
-                ),
-                onWebViewCreated: (controller) {
-                  webViewController = controller;
-                },
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: toggleAlarm,
-                child: (!isRinging == true)
-                    ? const Icon(Icons.alarm)
-                    : const Icon(Icons.alarm_off),
-              ),
+              body: WebView(fcmToken),
+              // floatingActionButton: const ToggleAlarmButton(),
             )));
-  }
-
-  void toggleAlarm() {
-    setState(() {
-      if (!isRinging) {
-        Future.delayed(const Duration(seconds: 5), () {
-          LocalNotification().show();
-          FlutterRingtonePlayer().playAlarm();
-          timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
-            Vibration.vibrate(duration: 1000);
-          });
-        });
-      } else {
-        timer?.cancel();
-        FlutterRingtonePlayer().stop();
-      }
-      isRinging = !isRinging;
-    });
   }
 }
