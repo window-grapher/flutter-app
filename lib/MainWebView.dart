@@ -21,12 +21,11 @@ class WebView extends ConsumerWidget {
       },
       initialUrlRequest: URLRequest(
           url: WebUri(
-              "https://window-grapher-yanbaru-express.app.takoyaki3.com/?fcm={$fcmToken}")),
+              "https://yanbaru-express-bus.window-grapher.com/?fcm={$fcmToken}")),
       initialSettings: InAppWebViewSettings(
-        javaScriptCanOpenWindowsAutomatically: true,
-        geolocationEnabled: true,
-        javaScriptEnabled: true,
-      ),
+          javaScriptCanOpenWindowsAutomatically: true,
+          geolocationEnabled: true,
+          javaScriptEnabled: true),
       onWebViewCreated: (controller) => {
         ref.read(webViewNotifierProvider.notifier).setController(controller)
       },
