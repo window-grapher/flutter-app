@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:alarm/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
-
 import 'notification.dart';
+
+const String portName = 'portName';
 
 class ToggleAlarmButton extends ConsumerWidget {
   const ToggleAlarmButton({
@@ -40,6 +42,23 @@ class ToggleAlarmButton extends ConsumerWidget {
       child: alarmState.isRinging
           ? const Icon(Icons.alarm_off)
           : const Icon(Icons.alarm_on),
+    );
+  }
+}
+
+class StopAlarmButton extends ConsumerWidget {
+  const StopAlarmButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FloatingActionButton(
+      onPressed: () {
+        IsolateNameServer.lookupPortByName(portName)?.send("stop");
+        FlutterRingtonePlayer().stop();
+      },
+      child: const Icon(Icons.alarm_off)
     );
   }
 }

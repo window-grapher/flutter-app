@@ -49,10 +49,10 @@ class MyApp extends ConsumerWidget {
             },
             child: Scaffold(
               appBar: AppBar(
-                title: const Text('車窓Grapher'),
+                title: const Text('ぽいくる'),
               ),
               body: WebView(fcmToken),
-              // floatingActionButton: const ToggleAlarmButton(),
+              floatingActionButton: const StopAlarmButton(),
             )));
   }
 }
