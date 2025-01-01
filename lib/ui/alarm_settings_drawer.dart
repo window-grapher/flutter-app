@@ -15,9 +15,9 @@ class AlarmSettingsDrawer extends ConsumerWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(child: Text('設定')),
+          const DrawerHeader(child: Text('アラーム設定')),
           ListTile(
-            title: const Text('アラーム音'),
+            title: const Text('サウンド'),
             trailing: Switch(
               value: ref.watch(sharedUtilityProvider).isAlarmSoundEnabled(),
               onChanged: (value) {
