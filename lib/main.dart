@@ -16,6 +16,7 @@ import 'ui/main_webview.dart';
 import 'firebase_options.dart';
 
 import 'notification.dart';
+import 'device_id.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,14 +25,19 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final fcmToken = await getDeviceToken();
-  print("token: $fcmToken");
+  final deviceId = await DeviceIdManager.getDeviceId();
+
+  print("FCM Token: $fcmToken");
+  print("Device ID: $deviceId");
+
   final sharedPreferences = await SharedPreferences.getInstance();
+
   runApp(ProviderScope(
     overrides: [
       sharedPreferencesProvider.overrideWithValue(sharedPreferences),
     ],
     child: MaterialApp(
-      home: MyApp(fcmToken ?? ""),
+      home: MyApp(fcmToken ?? "", deviceId),
     ),
   ));
 
@@ -48,8 +54,9 @@ Future<void> main() async {
 
 class MyApp extends ConsumerWidget {
   final String fcmToken;
+  final String deviceId; // 追加
 
-  const MyApp(this.fcmToken, {super.key});
+  const MyApp(this.fcmToken, this.deviceId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,7 +71,7 @@ class MyApp extends ConsumerWidget {
               appBar: AppBar(
                 title: const Text('ぽいくる'),
               ),
-              body: WebView(fcmToken),
+              body: WebView(fcmToken, deviceId),
               floatingActionButton: const StopAlarmButton(),
             )));
   }

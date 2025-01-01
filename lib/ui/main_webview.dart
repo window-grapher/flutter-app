@@ -5,11 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class WebView extends ConsumerWidget {
   final String fcmToken;
+  final String deviceId;
 
-  const WebView(this.fcmToken, {super.key});
+  const WebView(this.fcmToken, this.deviceId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final url = "https://yanbaru-express-bus.window-grapher.com/"
+        "?fcm=${fcmToken}&device_id=${deviceId}";
     return InAppWebView(
       onGeolocationPermissionsShowPrompt:
           (InAppWebViewController controller, String origin) async {
@@ -19,9 +22,7 @@ class WebView extends ConsumerWidget {
           retain: true,
         );
       },
-      initialUrlRequest: URLRequest(
-          url: WebUri(
-              "https://yanbaru-express-bus.window-grapher.com/?fcm={$fcmToken}")),
+      initialUrlRequest: URLRequest(url: WebUri(url)),
       initialSettings: InAppWebViewSettings(
           javaScriptCanOpenWindowsAutomatically: true,
           geolocationEnabled: true,
