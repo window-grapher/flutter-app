@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'alarm.dart';
 import 'ui/main_webview.dart';
 import 'firebase_options.dart';
 
@@ -59,7 +60,7 @@ class MyApp extends ConsumerWidget {
                 title: const Text('ぽいくる'),
               ),
               body: WebView(fcmToken),
-              // floatingActionButton: const StopAlarmButton(),
+              floatingActionButton: const StopAlarmButton(),
             )));
   }
 }
