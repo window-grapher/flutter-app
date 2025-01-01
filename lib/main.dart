@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:alarm/firebase.dart';
 import 'package:alarm/permission.dart';
@@ -23,14 +25,7 @@ Future<void> main() async {
   );
   final fcmToken = await getDeviceToken();
   print("token: $fcmToken");
-
-  // Handle foreground message.
-  handleMessage((title, message) => {LocalNotification().show(title, message)});
-  // Handle background message.
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
   final sharedPreferences = await SharedPreferences.getInstance();
-
   runApp(ProviderScope(
     overrides: [
       sharedPreferencesProvider.overrideWithValue(sharedPreferences),
@@ -39,6 +34,16 @@ Future<void> main() async {
       home: MyApp(fcmToken ?? ""),
     ),
   ));
+
+  // Handle foreground message.
+  handleMessage((RemoteMessage message) async {
+    print(
+        "message has come on foreground. ${message.data["title"]}: ${message.data["body"]}");
+    LocalNotification().show(message.data["title"], message.data["body"]);
+    startAlarm();
+  });
+  // Handle background message.
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 }
 
 class MyApp extends ConsumerWidget {
@@ -63,4 +68,22 @@ class MyApp extends ConsumerWidget {
               floatingActionButton: const StopAlarmButton(),
             )));
   }
+}
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print(
+      "message has come on background. ${message.data["title"]}: ${message.data["body"]}");
+  LocalNotification().show(message.data["title"], message.data["body"]);
+  startAlarm();
+
+  // Enable to stop alarm.
+  ReceivePort receiver = ReceivePort();
+  IsolateNameServer.registerPortWithName(receiver.sendPort, portName);
+  receiver.listen((message) async {
+    if (message == "stop") {
+      stopAlarm();
+    }
+  });
 }
