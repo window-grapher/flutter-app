@@ -1,13 +1,8 @@
+import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
-import 'dart:ui';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'alarm.dart';
-import 'notification.dart';
 
-void handleMessage(Function(String, String) onMessage) async {
+void handleMessage(Function(RemoteMessage message) onMessage) async {
   FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
     // TODO: If necessary send token to application server.
     // Note: This callback is fired at each app startup and whenever a new
@@ -29,28 +24,7 @@ void handleMessage(Function(String, String) onMessage) async {
   );
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print(
-        "message has come on foreground. ${message.data["title"]}: ${message.data["body"]}");
-    onMessage(message.data["title"], message.data["body"]);
-    // FlutterRingtonePlayer().playAlarm();
-  });
-}
-
-@pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print(
-      "message has come on background. ${message.data["title"]}: ${message.data["body"]}");
-  LocalNotification().show(message.data["title"], message.data["body"]);
-  // FlutterRingtonePlayer().playAlarm();
-
-  // Enable to stop alarm.
-  ReceivePort receiver = ReceivePort();
-  IsolateNameServer.registerPortWithName(receiver.sendPort, portName);
-  receiver.listen((message) async {
-    if (message == "stop") {
-      await FlutterRingtonePlayer().stop();
-    }
+    onMessage(message);
   });
 }
 
