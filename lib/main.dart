@@ -12,6 +12,7 @@ import 'alarm.dart';
 import 'firebase_options.dart';
 
 import 'notification.dart';
+import 'device_id.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,10 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final fcmToken = await getDeviceToken();
-  print("token: $fcmToken");
+  final deviceId = await DeviceIdManager.getDeviceId();
+
+  print("FCM Token: $fcmToken");
+  print("Device ID: $deviceId");
 
   // Handle foreground message.
   handleMessage((title, message) => {LocalNotification().show(title, message)});
@@ -29,15 +33,16 @@ Future<void> main() async {
 
   runApp(ProviderScope(
     child: MaterialApp(
-      home: MyApp(fcmToken ?? ""),
+      home: MyApp(fcmToken ?? "", deviceId),
     ),
   ));
 }
 
 class MyApp extends ConsumerWidget {
   final String fcmToken;
+  final String deviceId; // 追加
 
-  const MyApp(this.fcmToken, {super.key});
+  const MyApp(this.fcmToken, this.deviceId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,7 +56,7 @@ class MyApp extends ConsumerWidget {
               appBar: AppBar(
                 title: const Text('ぽいくる'),
               ),
-              body: WebView(fcmToken),
+              body: WebView(fcmToken, deviceId),
               floatingActionButton: const StopAlarmButton(),
             )));
   }
