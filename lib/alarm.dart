@@ -9,42 +9,43 @@ import 'package:vibration/vibration.dart';
 import 'notification.dart';
 
 const String portName = 'portName';
+Timer timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {});
 
-class ToggleAlarmButton extends ConsumerWidget {
-  const ToggleAlarmButton({
-    super.key,
-  });
-
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final alarmState = ref.watch(alarmNotifierProvider);
-    final alarmNotifier = ref.read(alarmNotifierProvider.notifier);
-
-    return FloatingActionButton(
-      onPressed: () {
-        if (!alarmState.isRinging) {
-         Future.delayed(const Duration(seconds: 5), () {
-            LocalNotification().show("alarm", "alarm triggered");
-            FlutterRingtonePlayer().playAlarm();
-            alarmNotifier.setTimer(
-                    Timer.periodic(const Duration(seconds: 2), (Timer timer) {
-                  Vibration.vibrate(duration: 1000);
-                }));
-          });
-        } else {
-          alarmNotifier.stopTimer();
-          LocalNotification().show("alarm", "alarm stopped");
-          FlutterRingtonePlayer().stop();
-        }
-        alarmNotifier.toggle();
-      },
-      child: alarmState.isRinging
-          ? const Icon(Icons.alarm_off)
-          : const Icon(Icons.alarm_on),
-    );
-  }
-}
+// class ToggleAlarmButton extends ConsumerWidget {
+//   const ToggleAlarmButton({
+//     super.key,
+//   });
+//
+//
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final alarmState = ref.watch(alarmNotifierProvider);
+//     final alarmNotifier = ref.read(alarmNotifierProvider.notifier);
+//
+//     return FloatingActionButton(
+//       onPressed: () {
+//         if (!alarmState.isRinging) {
+//          Future.delayed(const Duration(seconds: 5), () {
+//             LocalNotification().show("alarm", "alarm triggered");
+//             FlutterRingtonePlayer().playAlarm();
+//             alarmNotifier.setTimer(
+//                     Timer.periodic(const Duration(seconds: 2), (Timer timer) {
+//                   Vibration.vibrate(duration: 1000);
+//                 }));
+//           });
+//         } else {
+//           alarmNotifier.stopTimer();
+//           LocalNotification().show("alarm", "alarm stopped");
+//           FlutterRingtonePlayer().stop();
+//         }
+//         alarmNotifier.toggle();
+//       },
+//       child: alarmState.isRinging
+//           ? const Icon(Icons.alarm_off)
+//           : const Icon(Icons.alarm_on),
+//     );
+//   }
+// }
 
 class StopAlarmButton extends ConsumerWidget {
   const StopAlarmButton({
@@ -54,18 +55,19 @@ class StopAlarmButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FloatingActionButton(
-      onPressed: () {
-        IsolateNameServer.lookupPortByName(portName)?.send("stop");
-        FlutterRingtonePlayer().stop();
-      },
-      child: const Icon(Icons.alarm_off)
-    );
+        onPressed: () {
+          IsolateNameServer.lookupPortByName(portName)?.send("stop");
+          FlutterRingtonePlayer().stop();
+          timer.cancel();
+        },
+        child: const Icon(Icons.alarm_off));
   }
 }
 
 class AlarmState {
   bool isRinging = false;
   Timer? timer;
+
   AlarmState(this.isRinging, this.timer);
 }
 
