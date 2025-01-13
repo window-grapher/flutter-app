@@ -1,19 +1,26 @@
 import 'package:alarm/provider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class WebView extends ConsumerWidget {
   final String fcmToken;
   final String deviceId;
+  final String urlBase;
 
-  const WebView(this.fcmToken, this.deviceId, {super.key});
+  const WebView(this.fcmToken, this.deviceId, this.urlBase, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final url = "https://yanbaru-express-bus.window-grapher.com/"
-        "?fcm=${fcmToken}&device_id=${deviceId}";
+    final url = "$urlBase?fcm=$fcmToken&device_id=$deviceId";
     return InAppWebView(
+      gestureRecognizers: {
+        Factory<VerticalDragGestureRecognizer>(
+                () => VerticalDragGestureRecognizer()
+        )
+      },
       onGeolocationPermissionsShowPrompt:
           (InAppWebViewController controller, String origin) async {
         return GeolocationPermissionShowPromptResponse(
