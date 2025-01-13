@@ -62,44 +62,56 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
       length: 2,
+      initialIndex: ref.watch(sharedUtilityProvider).getCurrentTabIndex(),
       child: MaterialApp(
           home: PopScope(
               canPop: false,
               onPopInvoked: (didPop) async {
                 ref.watch(webViewNotifierProvider).webViewController?.goBack();
               },
-              child: Scaffold(
-                drawer: const AlarmSettingsDrawer(),
-                appBar: AppBar(
-                  title: const Text('ぽいくる'),
-                  bottom: TabBar(
-                    tabs: [
-                      Tab(
-                          child: RichText(
-                              textAlign: TextAlign.center,
-                              text: const TextSpan(
-                                style: TextStyle(color: Colors.black87),
-                                children: [
-                                  TextSpan(text: 'やんばる急行バス様\n'),
-                                  TextSpan(text: '実証実験'),
-                                ],
-                              ))),
-                      const Tab(
-                          child: Text('複数事業者対応版',
-                              style: TextStyle(color: Colors.black87))),
+              child: Builder(builder: (context) {
+                final TabController tabController =
+                    DefaultTabController.of(context);
+                tabController.addListener(() async {
+                  if (!tabController.indexIsChanging) {
+                    ref
+                        .read(sharedUtilityProvider)
+                        .setCurrentTabIndex(index: tabController.index);
+                  }
+                });
+                return Scaffold(
+                  drawer: const AlarmSettingsDrawer(),
+                  appBar: AppBar(
+                    title: const Text('ぽいくる'),
+                    bottom: TabBar(
+                      tabs: [
+                        Tab(
+                            child: RichText(
+                                textAlign: TextAlign.center,
+                                text: const TextSpan(
+                                  style: TextStyle(color: Colors.black87),
+                                  children: [
+                                    TextSpan(text: 'やんばる急行バス様\n'),
+                                    TextSpan(text: '実証実験'),
+                                  ],
+                                ))),
+                        const Tab(
+                            child: Text('複数事業者対応版',
+                                style: TextStyle(color: Colors.black87))),
+                      ],
+                    ),
+                  ),
+                  body: TabBarView(
+                    children: [
+                      WebView(fcmToken, deviceId,
+                          "https://window-grapher-yanbaru-express.app.takoyaki3.com"),
+                      WebView(fcmToken, deviceId,
+                          "https://dev.poicle.window-grapher.com"),
                     ],
                   ),
-                ),
-                body: TabBarView(
-                  children: [
-                    WebView(fcmToken, deviceId,
-                        "https://window-grapher-yanbaru-express.app.takoyaki3.com"),
-                    WebView(fcmToken, deviceId,
-                        "https://dev.poicle.window-grapher.com"),
-                  ],
-                ),
-                floatingActionButton: const StopAlarmButton(),
-              ))),
+                  floatingActionButton: const StopAlarmButton(),
+                );
+              }))),
     );
   }
 }
