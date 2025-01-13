@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '329621320065',
     projectId: 'window-grapher',
     storageBucket: 'window-grapher.firebasestorage.app',
-    iosBundleId: 'windowgrapher.com.alarm',
+    iosBundleId: 'poicle.com.alarm',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '329621320065',
     projectId: 'window-grapher',
     storageBucket: 'window-grapher.firebasestorage.app',
-    iosBundleId: 'windowgrapher.com.alarm',
+    iosBundleId: 'poicle.com.alarm',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

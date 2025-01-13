@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>windowgrapher.com.alarm</string>
+	<string>poicle.com.alarm</string>
 	<key>PROJECT_ID</key>
 	<string>window-grapher</string>
 	<key>STORAGE_BUCKET</key>

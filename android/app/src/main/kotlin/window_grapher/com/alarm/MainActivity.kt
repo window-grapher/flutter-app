@@ -1,4 +1,4 @@
-package window_grapher.com.alarm
+package poicle.com.alarm
 
 import io.flutter.embedding.android.FlutterActivity
 

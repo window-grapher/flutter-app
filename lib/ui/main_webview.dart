@@ -11,7 +11,7 @@ class WebView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final url = "https://yanbaru-express-bus.window-grapher.com/"
+    final url = "https://dev.poicle.window-grapher.com/"
         "?fcm=${fcmToken}&device_id=${deviceId}";
     return InAppWebView(
       onGeolocationPermissionsShowPrompt:

@@ -34,7 +34,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "window_grapher.com.alarm"
+    namespace "poicle.com.alarm"
     compileSdk flutter.compileSdkVersion
     // ndkVersion flutter.ndkVersion
 
@@ -56,7 +56,7 @@ android {
         versionCode 3
         versionName "1.1.0"
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "window_grapher.com.alarm"
+        applicationId "poicle.com.alarm"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 23
