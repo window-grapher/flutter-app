@@ -53,8 +53,8 @@ android {
     }
 
     defaultConfig {
-        versionCode 3
-        versionName "1.1.0"
+        versionCode 4
+        versionName "1.2.0"
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "window_grapher.com.alarm"
         // You can update the following values to match your application needs.
